@@ -16,13 +16,13 @@ namespace ImageConsumerGreyScale.Function
     public static class ImageConsumerGreyScale
     {
 
-         const string ImagesToConvertRoute = "converttograyscale/{name}";
+         const string ImagesToConvertRoute = "converttogreyscale/{name}";
 
         /// <summary>
-        /// Converts images uploaded into the "converttograyscale" container into gray scale format.
+        /// Converts images uploaded into the "converttogreyscale" container into gray scale format.
         /// If success, the convertedimages container contains the result image.
         /// If fail, the failedimages container contains the original image uploaded into the
-        /// "converttograyscale" continer
+        /// "converttogreyscale" continer
         /// 
         /// An initial job record is added to the jobs table indicating the status of the job
         /// </summary>
