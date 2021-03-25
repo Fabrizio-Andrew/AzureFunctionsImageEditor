@@ -6,6 +6,8 @@ namespace HW4AzureFunctions
 
         public const string GREYSCALEIMAGES_CONTAINERNAME = "converttogreyscale";
 
+        public const string SEPIAIMAGES_CONTAINERNAME = "converttosepia";
+
         public const string CONVERTED_IMAGES_CONTAINERNAME = "convertedimages";
 
         public const string FAILED_IMAGES_CONTAINERNAME = "failedimages";
