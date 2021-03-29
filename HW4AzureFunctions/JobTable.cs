@@ -66,13 +66,13 @@ namespace HW4AzureFunctions
         /// <param name="jobId">The job identifier.</param>
         /// <param name="status">The status.</param>
         /// <param name="message">The message.</param>
-        public async Task UpdateJobEntityStatus(string jobId, string status, string message)
+        public async Task UpdateJobEntityStatus(string jobId, int status, string message)
         {
             JobEntity jobEntityToReplace = await RetrieveJobEntity(jobId);
             if (jobEntityToReplace != null)
             {
-                jobEntityToReplace.Status = status;
-                jobEntityToReplace.ResultDetailsMessage = message;
+                jobEntityToReplace.status = status;
+                jobEntityToReplace.statusDescription = message;
                 await UpdateJobEntity(jobEntityToReplace);
             }
         }
@@ -83,14 +83,15 @@ namespace HW4AzureFunctions
         /// <param name="jobId">The job identifier.</param>
         /// <param name="status">The status.</param>
         /// <param name="message">The message.</param>
-        public async Task InsertOrReplaceJobEntity(string jobId, string status, string message)
+        public async Task InsertOrReplaceJobEntity(string jobId, int status, string message, string imageConversionMode)
         {
 
             JobEntity jobEntityToInsertOrReplace = new JobEntity();
             jobEntityToInsertOrReplace.RowKey = jobId;
             jobEntityToInsertOrReplace.PartitionKey = _partitionKey;
-            jobEntityToInsertOrReplace.Status = status;
-            jobEntityToInsertOrReplace.ResultDetailsMessage = message;
+            jobEntityToInsertOrReplace.status = status;
+            jobEntityToInsertOrReplace.statusDescription = message;
+            jobEntityToInsertOrReplace.imageConversionMode = imageConversionMode;
 
             TableOperation insertReplaceOperation = TableOperation.InsertOrReplace(jobEntityToInsertOrReplace);
             TableResult result = await _table.ExecuteAsync(insertReplaceOperation);

@@ -11,8 +11,8 @@ namespace ImageStatusUpdaterSuccess.Function
         [FunctionName("ImageStatusUpdaterSuccess")]
         public static async Task Run([BlobTrigger("convertedimages/{name}", Connection = ConfigSettings.STORAGE_CONNECTION_STRING_NAME)]CloudBlockBlob convertedImage, string name, ILogger log)
         {
-            string jobStatus = "Success!";
-            string jobMessage = "Image converted successfully.";
+            const int jobStatus = 3;
+            const string jobMessage = "Image converted successfully.";
 
             // Retrieve attributes (jobId) from blob
             await convertedImage.FetchAttributesAsync();

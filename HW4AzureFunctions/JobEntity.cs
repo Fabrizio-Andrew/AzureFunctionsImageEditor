@@ -9,10 +9,10 @@ namespace HW4AzureFunctions
 {
     public class JobEntity : TableEntity
     {
-        public string ConversionType { get; set; }
+        public string imageConversionMode { get; set; }
 
-        public string Status { get; set; }
+        public int status { get; set; }
 
-        public string ResultDetailsMessage { get; set; }
+        public string statusDescription { get; set; }
     }
 }

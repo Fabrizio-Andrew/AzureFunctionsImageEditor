@@ -16,7 +16,8 @@ namespace ImageConsumerSepia.Function
     public static class ImageConsumerSepia
         {
 
-         const string ImagesToConvertRoute = "converttosepia/{name}";
+        const string imageConversionMode = "Sepia";
+        const string ImagesToConvertRoute = "converttosepia/{name}";
 
         /// <summary>
         /// Converts images uploaded into the "converttosepia" container into sepia format.
@@ -33,6 +34,10 @@ namespace ImageConsumerSepia.Function
         public static async Task Run([BlobTrigger(ImagesToConvertRoute, Connection = ConfigSettings.STORAGE_CONNECTION_STRING_NAME)]CloudBlockBlob cloudBlockBlob, string name, ILogger log)
         {
             log.LogInformation($"C# Blob trigger function Processed blob\n Name:{name} \n ContentType: {cloudBlockBlob.Properties.ContentType} Bytes");
+
+            // Assign a GUID to job and create table entity as soon as the job is received
+            string jobId = Guid.NewGuid().ToString();
+            await UpdateJobTableWithStatus(log, jobId, status: 1, message: "Blob received.");
 
             using (Stream blobStream = await cloudBlockBlob.OpenReadAsync())
             {
@@ -52,7 +57,7 @@ namespace ImageConsumerSepia.Function
                 created = await failedImagesContainer.CreateIfNotExistsAsync();
                 log.LogInformation($"[{ConfigSettings.FAILED_IMAGES_CONTAINERNAME}] Container needed to be created: {created}");
 
-                await ConvertAndStoreImage(log, blobStream, convertedImagesContainer, name, failedImagesContainer);
+                await ConvertAndStoreImage(log, blobStream, convertedImagesContainer, name, failedImagesContainer, jobId);
             }
         }
 
@@ -67,14 +72,15 @@ namespace ImageConsumerSepia.Function
                                                  Stream uploadedImage,
                                                  CloudBlobContainer convertedImagesContainer,
                                                  string blobName,
-                                                 CloudBlobContainer failedImagesContainer)
+                                                 CloudBlobContainer failedImagesContainer,
+                                                 string jobId)
         {
             string convertedBlobName = $"{Guid.NewGuid()}-{blobName}";
-            string jobId = Guid.NewGuid().ToString();
+            //string jobId = Guid.NewGuid().ToString();
 
             try
             {
-                await UpdateJobTableWithStatus(log, jobId, status: "Processing image...", message: "Received the blob ready to process it.");
+                await UpdateJobTableWithStatus(log, jobId, status: 2, message: "Processing blob.");
 
                 uploadedImage.Seek(0, SeekOrigin.Begin);
 
@@ -118,10 +124,10 @@ namespace ImageConsumerSepia.Function
         /// <param name="jobId">The job identifier.</param>
         /// <param name="status">The status.</param>
         /// <param name="message">The message.</param>
-        private static async Task UpdateJobTableWithStatus(ILogger log, string jobId, string status, string message)
+        private static async Task UpdateJobTableWithStatus(ILogger log, string jobId, int status, string message)
         {
             JobTable jobTable = new JobTable(log, ConfigSettings.IMAGEJOBS_PARTITIONKEY);
-            await jobTable.InsertOrReplaceJobEntity(jobId, status: status, message: message);
+            await jobTable.InsertOrReplaceJobEntity(jobId, status: status, message: message, imageConversionMode);
         }
 
         /// <summary>

@@ -14,7 +14,7 @@ namespace HW4AzureFunctions
 
         public const string JOBS_TABLENAME = "jobs";
 
-        public const string IMAGEJOBS_PARTITIONKEY = "ImageJobs";
+        public const string IMAGEJOBS_PARTITIONKEY = "imageconversions";
 
         public const string JOBID_METADATA_NAME = "JobId";
     }
