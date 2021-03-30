@@ -83,15 +83,19 @@ namespace HW4AzureFunctions
         /// <param name="jobId">The job identifier.</param>
         /// <param name="status">The status.</param>
         /// <param name="message">The message.</param>
-        public async Task InsertOrReplaceJobEntity(string jobId, int status, string message, string imageConversionMode)
+        public async Task InsertOrReplaceJobEntity(string jobId, int status, string message, string imageSource, string imageConversionMode)
         {
 
             JobEntity jobEntityToInsertOrReplace = new JobEntity();
             jobEntityToInsertOrReplace.RowKey = jobId;
-            jobEntityToInsertOrReplace.PartitionKey = _partitionKey;
+            jobEntityToInsertOrReplace.imageConversionMode = imageConversionMode;
             jobEntityToInsertOrReplace.status = status;
             jobEntityToInsertOrReplace.statusDescription = message;
-            jobEntityToInsertOrReplace.imageConversionMode = imageConversionMode;
+            jobEntityToInsertOrReplace.imageSource = imageSource;
+            jobEntityToInsertOrReplace.PartitionKey = _partitionKey;
+
+
+
 
             TableOperation insertReplaceOperation = TableOperation.InsertOrReplace(jobEntityToInsertOrReplace);
             TableResult result = await _table.ExecuteAsync(insertReplaceOperation);
