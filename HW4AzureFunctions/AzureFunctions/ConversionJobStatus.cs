@@ -29,10 +29,11 @@ namespace ConversionJobStatus.Function
         {
 
             log.LogInformation("C# HTTP trigger function processed a request.");
-
-            // Retrieve the storage account from the connection string.
-            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(_configuration.GetConnectionString(ConfigSettings.STORAGE_CONNECTION_STRING_NAME));
-
+            
+            // Get the storage account
+            string storageConnectionString = Environment.GetEnvironmentVariable(ConfigSettings.STORAGE_CONNECTION_STRING_NAME);
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(storageConnectionString);
+            
             // Create the table client
             var tableClient = storageAccount.CreateCloudTableClient();
 
