@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.IO;
 using System.Threading.Tasks;
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
@@ -29,7 +30,7 @@ namespace ConversionJobStatus.Function
         {
 
             log.LogInformation("C# HTTP trigger function processed a request.");
-            
+
             // Get the storage account
             string storageConnectionString = Environment.GetEnvironmentVariable(ConfigSettings.STORAGE_CONNECTION_STRING_NAME);
             CloudStorageAccount storageAccount = CloudStorageAccount.Parse(storageConnectionString);
@@ -47,8 +48,19 @@ namespace ConversionJobStatus.Function
             {
                 jobEntries.Add(entity);
             }
+            ObjectResult result = new ObjectResult(jobEntries);
+            return new ObjectResult(BeautifyJson(jobEntries));
+        }
 
-            return new ObjectResult(jobEntries);
+        /// <summary>
+        /// Returns a formatted/indented Json String.
+        /// </summary>
+        /// <param name="jobEntries"></param>
+        /// <returns></returns>
+        public static string BeautifyJson(ArrayList jobEntries)
+        {
+            JsonSerializerOptions options = new JsonSerializerOptions(){ WriteIndented = true };
+            return System.Text.Json.JsonSerializer.Serialize(jobEntries, options);
         }
     }
 }
