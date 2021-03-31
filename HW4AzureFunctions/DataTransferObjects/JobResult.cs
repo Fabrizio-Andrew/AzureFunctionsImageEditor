@@ -1,4 +1,4 @@
-namespace HW4AzureFunctions
+namespace HW4AzureFunctions.DataTransferObjects
 {
     public class JobResult
     {

@@ -1,8 +1,9 @@
-using System.IO;
 using System;
+using System.IO;
 using System.Collections;
 using System.Threading.Tasks;
 using System.Text.Json;
+using System.Web.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
@@ -13,6 +14,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using HW4AzureFunctions;
+using HW4AzureFunctions.DataTransferObjects;
 
 namespace ConversionJobStatusById.Function
 {
@@ -43,8 +45,8 @@ namespace ConversionJobStatusById.Function
             TableOperation retrieveOperation = TableOperation.Retrieve<JobEntity>(ConfigSettings.IMAGEJOBS_PARTITIONKEY, id);
             TableResult retrievedResult = table.ExecuteAsync(retrieveOperation).ConfigureAwait(false).GetAwaiter().GetResult();
 
-            //if (retrievedResult.Result != null)
-            //{
+            if (retrievedResult.Result != null)
+            {
                 JobEntity entity = retrievedResult.Result as JobEntity;
 
                 // Map relevant JobEntity attributes to JobResult class
@@ -61,9 +63,9 @@ namespace ConversionJobStatusById.Function
                 var formattedResult = System.Text.Json.JsonSerializer.Serialize(jobResult, options);
 
                 return new ObjectResult(formattedResult);
-            //}
+            }
 
-            //return new ObjectResult({ "error": "not found" });
+            return StatusCode((int)HttpStatusCode.NotFound, ErrorResponse.GenerateErrorResponse(3, null, "id", id));
         }
     }
 }

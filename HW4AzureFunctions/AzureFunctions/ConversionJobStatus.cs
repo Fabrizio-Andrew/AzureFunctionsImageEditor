@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using HW4AzureFunctions;
+using HW4AzureFunctions.DataTransferObjects;
 
 namespace ConversionJobStatus.Function
 {
