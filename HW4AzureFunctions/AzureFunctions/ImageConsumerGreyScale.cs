@@ -2,7 +2,6 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
@@ -20,20 +19,21 @@ namespace ImageConsumerGreyScale.Function
          const string ImagesToConvertRoute = "converttogreyscale/{name}";
 
         /// <summary>
-        /// Converts images uploaded into the "converttogreyscale" container into gray scale format.
+        /// Converts images uploaded into the "converttogreyscale" container into grey scale format.
         /// If success, the convertedimages container contains the result image.
-        /// If fail, the failedimages container contains the original image uploaded into the
+        /// If fail, the failedimages container contains a copy of the original image uploaded into the
         /// "converttogreyscale" continer
         /// 
-        /// An initial job record is added to the jobs table indicating the status of the job
+        /// An initial job record is added to the jobs table upon receipt of the job.  The job status is updated
+        /// when the image is about to be converted.
         /// </summary>
-        /// <param name="blobStream">The BLOB stream.</param>
+        /// <param name="cloudBlockBlob">The Blob.</param>
         /// <param name="name">The name.</param>
         /// <param name="log">The log.</param>
         [FunctionName("ImageConsumerGreyScale")]
         public static async Task Run([BlobTrigger(ImagesToConvertRoute, Connection = ConfigSettings.STORAGE_CONNECTION_STRING_NAME)]CloudBlockBlob cloudBlockBlob, string name, ILogger log)
         {
-            log.LogInformation($"C# Blob trigger function Processed blob\n Name:{name} \n ContentType: {cloudBlockBlob.Properties.ContentType} Bytes");
+            log.LogInformation($"ImageConsumerGreyScale function Processed blob\n Name:{name} \n ContentType: {cloudBlockBlob.Properties.ContentType} Bytes");
 
             // Assign a GUID to the job
             string jobId = Guid.NewGuid().ToString();
@@ -51,7 +51,7 @@ namespace ImageConsumerGreyScale.Function
                 string storageConnectionString = Environment.GetEnvironmentVariable(ConfigSettings.STORAGE_CONNECTION_STRING_NAME);
                 CloudStorageAccount storageAccount = CloudStorageAccount.Parse(storageConnectionString);
 
-                // Create a blob client so blobs can be retrieved and created
+                // Create a blob client
                 CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
 
                 // Create or retrieve a reference to the converted images container
@@ -68,12 +68,15 @@ namespace ImageConsumerGreyScale.Function
         }
 
         /// <summary>
-        /// Converts the and store image.
+        /// Converts and stores the image.
         /// </summary>
-        /// <param name="log">The log.</param>
-        /// <param name="uploadedImagesContainer">The uploaded images container.</param>
-        /// <param name="convertedImagesContainer">The converted images container.</param>
-        /// <param name="blobName">Name of the BLOB.</param>
+        /// <param name="log"></param>
+        /// <param name="uploadedImage"></param>
+        /// <param name="convertedImagesContainer"></param>
+        /// <param name="blobName"></param>
+        /// <param name="failedImagesContainer"></param>
+        /// <param name="jobId"></param>
+        /// <param name="imageSource"></param>
         private static async Task ConvertAndStoreImage(ILogger log,
                                                  Stream uploadedImage,
                                                  CloudBlobContainer convertedImagesContainer,
@@ -96,6 +99,7 @@ namespace ImageConsumerGreyScale.Function
                 {
                     log.LogInformation($"[+] Starting conversion of image {blobName}");
 
+                    // convert the image
                     image.Mutate(x => x.Grayscale());
                     image.SaveAsJpeg(convertedMemoryStream);
 
@@ -111,11 +115,7 @@ namespace ImageConsumerGreyScale.Function
                     convertedBlockBlob.Properties.ContentType = System.Net.Mime.MediaTypeNames.Image.Jpeg;
                     await convertedBlockBlob.UploadFromStreamAsync(convertedMemoryStream);
 
-                    // Save the job id in blob meta data for later retrieval
-                    //convertedBlockBlob.SetMetadata(null);
-
                     log.LogInformation($"[-] Stored converted image {convertedBlobName} into {ConfigSettings.CONVERTED_IMAGES_CONTAINERNAME} container");
-
                 }
             }
             catch (Exception ex)
@@ -131,6 +131,7 @@ namespace ImageConsumerGreyScale.Function
         /// <param name="jobId">The job identifier.</param>
         /// <param name="status">The status.</param>
         /// <param name="message">The message.</param>
+        /// <param name="imageSource">The original image URL.</param>
         private static async Task UpdateJobTableWithStatus(ILogger log, string jobId, int status, string message, string imageSource)
         {
             JobTable jobTable = new JobTable(log, ConfigSettings.IMAGEJOBS_PARTITIONKEY);

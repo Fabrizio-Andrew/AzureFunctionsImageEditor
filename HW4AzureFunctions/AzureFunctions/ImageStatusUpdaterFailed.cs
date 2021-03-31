@@ -8,8 +8,16 @@ namespace ImageStatusUpdater.Function
 {
     public static class ImageStatusUpdaterFailed
     {
+        /// <summary>
+        /// Stores blobs that failed conversion in the failedimages container.
+        /// 
+        /// Updates the job status table for the failed job.
+        /// </summary>
+        /// <param name="failedImage"></param>
+        /// <param name="log"></param>
+        /// <returns></returns>
         [FunctionName("ImageStatusUpdaterFailed")]
-        public static async Task Run([BlobTrigger("failedimages/{name}", Connection = ConfigSettings.STORAGE_CONNECTION_STRING_NAME)]CloudBlockBlob failedImage, string name, ILogger log)
+        public static async Task Run([BlobTrigger("failedimages/{name}", Connection = ConfigSettings.STORAGE_CONNECTION_STRING_NAME)]CloudBlockBlob failedImage, ILogger log)
          {
             const int jobStatus = 4;
             const string jobMessage = "Image conversion failed.";

@@ -8,8 +8,16 @@ namespace ImageStatusUpdaterSuccess.Function
 {
     public static class ImageStatusUpdaterSuccess
     {
+        /// <summary>
+        /// Stores successfully converted blobs in the convertedimages container.
+        /// 
+        /// Updates the job status table for the successful job.
+        /// </summary>
+        /// <param name="convertedImage"></param>
+        /// <param name="log"></param>
+        /// <returns></returns>
         [FunctionName("ImageStatusUpdaterSuccess")]
-        public static async Task Run([BlobTrigger("convertedimages/{name}", Connection = ConfigSettings.STORAGE_CONNECTION_STRING_NAME)]CloudBlockBlob convertedImage, string name, ILogger log)
+        public static async Task Run([BlobTrigger("convertedimages/{name}", Connection = ConfigSettings.STORAGE_CONNECTION_STRING_NAME)]CloudBlockBlob convertedImage, ILogger log)
         {
             const int jobStatus = 3;
             const string jobMessage = "Image converted successfully.";

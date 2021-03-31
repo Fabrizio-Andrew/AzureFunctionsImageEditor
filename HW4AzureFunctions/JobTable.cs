@@ -32,7 +32,6 @@ namespace HW4AzureFunctions
         /// <summary>
         /// Retrieves the job entity.
         /// </summary>
-        /// <param name="partitionKey">The partition key.</param>
         /// <param name="jobId">The job identifier.</param>
         /// <returns>JobEntity.</returns>
         public async Task<JobEntity> RetrieveJobEntity(string jobId)
@@ -66,6 +65,7 @@ namespace HW4AzureFunctions
         /// <param name="jobId">The job identifier.</param>
         /// <param name="status">The status.</param>
         /// <param name="message">The message.</param>
+        /// <param name="imageResult">The url string for the converted/failed image.</param>
         public async Task UpdateJobEntityStatus(string jobId, int status, string message, string imageResult)
         {
             JobEntity jobEntityToReplace = await RetrieveJobEntity(jobId);
@@ -84,9 +84,11 @@ namespace HW4AzureFunctions
         /// <param name="jobId">The job identifier.</param>
         /// <param name="status">The status.</param>
         /// <param name="message">The message.</param>
+        /// <param name="imageSource">The url string for the uploaded image.</param>
+        /// <param name="imageConversionMode">The type of conversion to be processed.</param>
         public async Task InsertOrReplaceJobEntity(string jobId, int status, string message, string imageSource, string imageConversionMode)
         {
-
+            // Map parameters to JobEntity attributes
             JobEntity jobEntityToInsertOrReplace = new JobEntity();
             jobEntityToInsertOrReplace.RowKey = jobId;
             jobEntityToInsertOrReplace.imageConversionMode = imageConversionMode;

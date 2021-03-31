@@ -1,5 +1,8 @@
 namespace HW4AzureFunctions.DataTransferObjects
 {
+    /// <summary>
+    /// Defines the Job Status data to be provided to the client.
+    /// </summary>
     public class JobResult
     {
         public string jobId { get; set; }

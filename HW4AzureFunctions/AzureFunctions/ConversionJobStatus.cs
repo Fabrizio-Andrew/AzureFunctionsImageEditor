@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.IO;
 using System.Threading.Tasks;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +10,6 @@ using Microsoft.WindowsAzure.Storage.Table;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
 using HW4AzureFunctions;
 using HW4AzureFunctions.DataTransferObjects;
 
@@ -23,12 +21,18 @@ namespace ConversionJobStatus.Function
 
         private readonly IConfiguration _configuration;
 
+        /// <summary>
+        /// Returns a JSON array of all jobs received by the application.
+        /// </summary>
+        /// <param name="req"></param>
+        /// <param name="log"></param>
+        /// <returns></returns>
         [FunctionName("ConversionJobStatus")]
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = myRoute)] HttpRequest req, ILogger log)
         {
 
-            log.LogInformation("C# HTTP trigger function processed a request.");
+            log.LogInformation("ConverionJobStatus function processed a request.");
 
             // Get the storage account
             string storageConnectionString = Environment.GetEnvironmentVariable(ConfigSettings.STORAGE_CONNECTION_STRING_NAME);

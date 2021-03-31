@@ -11,6 +11,12 @@ namespace HW4AzureFunctions
 {
     public class ImageCleanup
     {
+        /// <summary>
+        /// Batch job that deletes all original images for jobs that have been successfully completed.
+        /// </summary>
+        /// <param name="myTimer"></param>
+        /// <param name="log"></param>
+        /// <returns></returns>
         [FunctionName("ImageCleanup")]
         public async Task Run([TimerTrigger("0 */2 * * * *")]TimerInfo myTimer, ILogger log)
         {
