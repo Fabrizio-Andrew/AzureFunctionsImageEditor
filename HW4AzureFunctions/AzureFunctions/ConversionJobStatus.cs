@@ -58,18 +58,12 @@ namespace ConversionJobStatus.Function
                 resultsList.Add(jobResult);
             }
             ObjectResult result = new ObjectResult(resultsList);
-            return new ObjectResult(BeautifyJson(resultsList));
-        }
 
-        /// <summary>
-        /// Returns a formatted/indented Json String.
-        /// </summary>
-        /// <param name="jobEntries"></param>
-        /// <returns></returns>
-        public static string BeautifyJson(ArrayList jobEntries)
-        {
+            // Make some pretty Json
             JsonSerializerOptions options = new JsonSerializerOptions(){ WriteIndented = true };
-            return System.Text.Json.JsonSerializer.Serialize(jobEntries, options);
+            var formattedResults = System.Text.Json.JsonSerializer.Serialize(resultsList, options);
+
+            return new ObjectResult(formattedResults);
         }
     }
 }
