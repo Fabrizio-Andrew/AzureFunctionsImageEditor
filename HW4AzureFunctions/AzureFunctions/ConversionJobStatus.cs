@@ -22,7 +22,6 @@ namespace ConversionJobStatus.Function
 
         private readonly IConfiguration _configuration;
 
-
         [FunctionName("ConversionJobStatus")]
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = myRoute)] HttpRequest req,
@@ -57,7 +56,6 @@ namespace ConversionJobStatus.Function
 
                 resultsList.Add(jobResult);
             }
-            ObjectResult result = new ObjectResult(resultsList);
 
             // Make some pretty Json
             JsonSerializerOptions options = new JsonSerializerOptions(){ WriteIndented = true };
