@@ -18,7 +18,7 @@ namespace ConversionJobStatus.Function
 {
     public class ConversionJobStatus
     {
-        const string myRoute = "api/v1/jobs";
+        const string myRoute = "v1/jobs";
 
         private readonly IConfiguration _configuration;
 
@@ -42,14 +42,23 @@ namespace ConversionJobStatus.Function
             var table = tableClient.GetTableReference("jobs");
 
 
-            ArrayList jobEntries = new ArrayList();
+            ArrayList resultsList = new ArrayList();
             
             foreach (JobEntity entity in await table.ExecuteQuerySegmentedAsync(new TableQuery<JobEntity>(), null))
             {
-                jobEntries.Add(entity);
+                // Map relevant JobEntity attributes to JobResult class
+                JobResult jobResult = new JobResult();
+                jobResult.jobId = entity.RowKey;
+                jobResult.imageConversionMode = entity.imageConversionMode;
+                jobResult.status = entity.status;
+                jobResult.statusDescription = entity.statusDescription;
+                jobResult.imageSource = entity.imageSource;
+                jobResult.imageResult = entity.imageResult;
+
+                resultsList.Add(jobResult);
             }
-            ObjectResult result = new ObjectResult(jobEntries);
-            return new ObjectResult(BeautifyJson(jobEntries));
+            ObjectResult result = new ObjectResult(resultsList);
+            return new ObjectResult(BeautifyJson(resultsList));
         }
 
         /// <summary>
