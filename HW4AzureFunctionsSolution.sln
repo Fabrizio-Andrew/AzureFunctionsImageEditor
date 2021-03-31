@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.6.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HW4AzureFunctions", "HW4AzureFunctions\HW4AzureFunctions.csproj", "{FE680EA1-2F5D-474F-A803-27C7E70F5061}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HW4AzureFunctions", "HW4AzureFunctions\HW4AzureFunctions.csproj", "{FE680EA1-2F5D-474F-A803-27C7E70F5061}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,9 +13,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{FE680EA1-2F5D-474F-A803-27C7E70F5061}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -30,5 +27,11 @@ Global
 		{FE680EA1-2F5D-474F-A803-27C7E70F5061}.Release|x64.Build.0 = Release|Any CPU
 		{FE680EA1-2F5D-474F-A803-27C7E70F5061}.Release|x86.ActiveCfg = Release|Any CPU
 		{FE680EA1-2F5D-474F-A803-27C7E70F5061}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0D16C4F2-7483-4517-A937-97C412426A20}
 	EndGlobalSection
 EndGlobal
