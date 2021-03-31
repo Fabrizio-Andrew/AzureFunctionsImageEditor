@@ -20,12 +20,13 @@ namespace ImageStatusUpdater.Function
             if (failedImage.Metadata.ContainsKey(ConfigSettings.JOBID_METADATA_NAME))
             {
                 string jobId = failedImage.Metadata[ConfigSettings.JOBID_METADATA_NAME];
+                string imageResult = failedImage.Uri.ToString();
 
                 log.LogInformation($"C# Blob trigger function Processed blob\n Name:{failedImage.Name} \n JobId: [{jobId}]");
 
                 // Set the job status
                 JobTable jobTable = new JobTable(log, ConfigSettings.IMAGEJOBS_PARTITIONKEY);
-                await jobTable.UpdateJobEntityStatus(jobId, jobStatus, jobMessage);
+                await jobTable.UpdateJobEntityStatus(jobId, jobStatus, jobMessage, imageResult);
             }
             else 
             {

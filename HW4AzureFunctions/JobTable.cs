@@ -66,13 +66,14 @@ namespace HW4AzureFunctions
         /// <param name="jobId">The job identifier.</param>
         /// <param name="status">The status.</param>
         /// <param name="message">The message.</param>
-        public async Task UpdateJobEntityStatus(string jobId, int status, string message)
+        public async Task UpdateJobEntityStatus(string jobId, int status, string message, string imageResult)
         {
             JobEntity jobEntityToReplace = await RetrieveJobEntity(jobId);
             if (jobEntityToReplace != null)
             {
                 jobEntityToReplace.status = status;
                 jobEntityToReplace.statusDescription = message;
+                jobEntityToReplace.imageResult = imageResult;
                 await UpdateJobEntity(jobEntityToReplace);
             }
         }
