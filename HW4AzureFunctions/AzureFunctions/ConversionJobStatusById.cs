@@ -57,7 +57,7 @@ namespace ConversionJobStatusById.Function
                 jobResult.statusDescription = entity.statusDescription;
                 jobResult.imageSource = entity.imageSource;
                 jobResult.imageResult = entity.imageResult;
-
+            
                 // Make some pretty Json
                 JsonSerializerOptions options = new JsonSerializerOptions(){ WriteIndented = true };
                 var formattedResult = System.Text.Json.JsonSerializer.Serialize(jobResult, options);
@@ -65,7 +65,14 @@ namespace ConversionJobStatusById.Function
                 return new ObjectResult(formattedResult);
             }
 
-            return StatusCode((int)HttpStatusCode.NotFound, ErrorResponse.GenerateErrorResponse(3, null, "id", id));
+            // Create error response
+            ErrorResponse errorResponse = ErrorResponse.GenerateErrorResponse(3, null, "id", id);
+
+            // Format error response
+            JsonSerializerOptions errorOptions = new JsonSerializerOptions() { WriteIndented = true };
+            var formattedError = System.Text.Json.JsonSerializer.Serialize(errorResponse, errorOptions);
+
+            return new ObjectResult(formattedError);
         }
     }
 }
