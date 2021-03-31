@@ -9,6 +9,8 @@ Function App URL: https://cscie94-hw4azurefunctions20210331145154.azurewebsites.
 
 ConversionJobStatus Function URL = https://hw4azurefunctions20210331154947.azurewebsites.net/api/v1/jobs?code=7Y8doldKN2a9VbWIdXAQIJWSp8RQhItNJY5Eyjf78bNbDdFppzla1w==
 
+ConversionJobStatusById Function URL = https://hw4azurefunctions20210331154947.azurewebsites.net/api/v1/jobs/{id}?code=aC2pwAR/jgVJTkbEZqvGcUe4acE6RFvuZdaeIwHswNOTe9f6/w8qtg==
+
 
 Blob service SAS URL = https://blobstorageappstorage.blob.core.windows.net/?sv=2020-02-10&ss=bfqt&srt=sco&sp=rwdlacup&se=2021-04-30T04:00:00Z&st=2021-03-10T05:00:00Z&spr=https&sig=Ax8z%2BJreHFZ%2BA4KFqAhHHblr4o5SMltEVqVErCDxqXg%3D
 
