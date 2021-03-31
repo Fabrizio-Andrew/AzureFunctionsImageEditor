@@ -95,9 +95,6 @@ namespace HW4AzureFunctions
             jobEntityToInsertOrReplace.imageSource = imageSource;
             jobEntityToInsertOrReplace.PartitionKey = _partitionKey;
 
-
-
-
             TableOperation insertReplaceOperation = TableOperation.InsertOrReplace(jobEntityToInsertOrReplace);
             TableResult result = await _table.ExecuteAsync(insertReplaceOperation);
         }

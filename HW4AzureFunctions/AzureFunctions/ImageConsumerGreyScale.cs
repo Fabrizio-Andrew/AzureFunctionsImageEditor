@@ -83,10 +83,10 @@ namespace ImageConsumerGreyScale.Function
                                                  string imageSource)
         {
             string convertedBlobName = $"{Guid.NewGuid()}-{blobName}";
-            //string jobId = Guid.NewGuid().ToString();
 
             try
             {
+                // Update Job Status - about to convert image
                 await UpdateJobTableWithStatus(log, jobId, status: 2, message: "Processing blob.", imageSource: imageSource);
 
                 uploadedImage.Seek(0, SeekOrigin.Begin);

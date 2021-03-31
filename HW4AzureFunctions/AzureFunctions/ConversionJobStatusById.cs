@@ -1,6 +1,6 @@
+using System.IO;
 using System;
 using System.Collections;
-using System.IO;
 using System.Threading.Tasks;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
@@ -14,17 +14,17 @@ using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using HW4AzureFunctions;
 
-namespace ConversionJobStatus.Function
+namespace ConversionJobStatusById.Function
 {
-    public class ConversionJobStatus
+    public class ConversionJobStatusById
     {
-        const string myRoute = "v1/jobs";
+        const string myRoute = "v1/jobs/{id}";
 
         private readonly IConfiguration _configuration;
 
-        [FunctionName("ConversionJobStatus")]
+        [FunctionName("ConversionJobStatusById")]
         public async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "get", Route = myRoute)] HttpRequest req, ILogger log)
+            [HttpTrigger(AuthorizationLevel.Function, "get", Route = myRoute)] HttpRequest req, [FromRoute]string id, ILogger log)
         {
 
             log.LogInformation("C# HTTP trigger function processed a request.");
@@ -37,13 +37,16 @@ namespace ConversionJobStatus.Function
             var tableClient = storageAccount.CreateCloudTableClient();
 
             // Create the CloudTable object for the "jobs" table
-            var table = tableClient.GetTableReference("jobs");
+            var table = tableClient.GetTableReference(ConfigSettings.JOBS_TABLENAME);
 
+            // Retrieve the specified entity from Azure Storage Table
+            TableOperation retrieveOperation = TableOperation.Retrieve<JobEntity>(ConfigSettings.IMAGEJOBS_PARTITIONKEY, id);
+            TableResult retrievedResult = table.ExecuteAsync(retrieveOperation).ConfigureAwait(false).GetAwaiter().GetResult();
 
-            ArrayList resultsList = new ArrayList();
-            
-            foreach (JobEntity entity in await table.ExecuteQuerySegmentedAsync(new TableQuery<JobEntity>(), null))
-            {
+            //if (retrievedResult.Result != null)
+            //{
+                JobEntity entity = retrievedResult.Result as JobEntity;
+
                 // Map relevant JobEntity attributes to JobResult class
                 JobResult jobResult = new JobResult();
                 jobResult.jobId = entity.RowKey;
@@ -53,14 +56,14 @@ namespace ConversionJobStatus.Function
                 jobResult.imageSource = entity.imageSource;
                 jobResult.imageResult = entity.imageResult;
 
-                resultsList.Add(jobResult);
-            }
+                // Make some pretty Json
+                JsonSerializerOptions options = new JsonSerializerOptions(){ WriteIndented = true };
+                var formattedResult = System.Text.Json.JsonSerializer.Serialize(jobResult, options);
 
-            // Make some pretty Json
-            JsonSerializerOptions options = new JsonSerializerOptions(){ WriteIndented = true };
-            var formattedResults = System.Text.Json.JsonSerializer.Serialize(resultsList, options);
+                return new ObjectResult(formattedResult);
+            //}
 
-            return new ObjectResult(formattedResults);
+            //return new ObjectResult({ "error": "not found" });
         }
     }
 }

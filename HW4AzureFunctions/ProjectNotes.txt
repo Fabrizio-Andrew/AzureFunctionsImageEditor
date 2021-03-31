@@ -1,0 +1,7 @@
+Blob service SAS URL = https://blobstorageappstorage.blob.core.windows.net/?sv=2020-02-10&ss=bfqt&srt=sco&sp=rwdlacup&se=2021-04-30T04:00:00Z&st=2021-03-10T05:00:00Z&spr=https&sig=Ax8z%2BJreHFZ%2BA4KFqAhHHblr4o5SMltEVqVErCDxqXg%3D
+
+File service SAS URL = https://blobstorageappstorage.file.core.windows.net/?sv=2020-02-10&ss=bfqt&srt=sco&sp=rwdlacup&se=2021-04-30T04:00:00Z&st=2021-03-10T05:00:00Z&spr=https&sig=Ax8z%2BJreHFZ%2BA4KFqAhHHblr4o5SMltEVqVErCDxqXg%3D
+
+Queue service SAS URL = https://blobstorageappstorage.queue.core.windows.net/?sv=2020-02-10&ss=bfqt&srt=sco&sp=rwdlacup&se=2021-04-30T04:00:00Z&st=2021-03-10T05:00:00Z&spr=https&sig=Ax8z%2BJreHFZ%2BA4KFqAhHHblr4o5SMltEVqVErCDxqXg%3D
+
+Table service SAS URL = https://blobstorageappstorage.table.core.windows.net/?sv=2020-02-10&ss=bfqt&srt=sco&sp=rwdlacup&se=2021-04-30T04:00:00Z&st=2021-03-10T05:00:00Z&spr=https&sig=Ax8z%2BJreHFZ%2BA4KFqAhHHblr4o5SMltEVqVErCDxqXg%3D

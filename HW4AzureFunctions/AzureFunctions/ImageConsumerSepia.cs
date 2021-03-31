@@ -35,7 +35,7 @@ namespace ImageConsumerSepia.Function
         {
             log.LogInformation($"C# Blob trigger function Processed blob\n Name:{name} \n ContentType: {cloudBlockBlob.Properties.ContentType} Bytes");
 
-             // Assign a GUID to the job
+            // Assign a GUID to the job
             string jobId = Guid.NewGuid().ToString();
 
             // Retrieve the public uri for the uploaded blob
@@ -83,10 +83,10 @@ namespace ImageConsumerSepia.Function
                                                  string imageSource)
         {
             string convertedBlobName = $"{Guid.NewGuid()}-{blobName}";
-            //string jobId = Guid.NewGuid().ToString();
 
             try
             {
+                // Update Job Status - about to convert image
                 await UpdateJobTableWithStatus(log, jobId, status: 2, message: "Processing blob.", imageSource: imageSource);
 
                 uploadedImage.Seek(0, SeekOrigin.Begin);
